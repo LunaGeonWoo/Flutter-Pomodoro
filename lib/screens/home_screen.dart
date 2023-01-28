@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pomodoro/widgets/pomodoro_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isRunning = false;
   int totalPomodoros = 0;
   late Timer timer;
+  late List<Widget> toSetButtons;
 
   void onTick(Timer timer) {
     if (totalSeconds == 0) {
@@ -48,6 +50,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void onResetPressed() {
+    setState(() {
+      totalSeconds = twentyFiveMinutes;
+    });
+  }
+
   String format(int seconds) {
     Duration duration = Duration(seconds: seconds);
     String removedMilliSecondsAndHours =
@@ -57,6 +65,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (isRunning) {
+      toSetButtons = [
+        PomodoroButton(
+          icon: const Icon(Icons.pause_circle_outline),
+          onPressed: onPausePressed,
+        ),
+      ];
+    } else {
+      toSetButtons = [
+        PomodoroButton(
+          icon: const Icon(Icons.play_circle_outline),
+          onPressed: onStartPressed,
+        ),
+        PomodoroButton(
+          icon: const Icon(Icons.restore_outlined),
+          onPressed: onResetPressed,
+        ),
+      ];
+    }
     return Scaffold(
       // ignore: deprecated_member_use
       backgroundColor: Theme.of(context).backgroundColor,
@@ -79,13 +106,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Flexible(
             flex: 3,
             child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed: isRunning ? onPausePressed : onStartPressed,
-                icon: Icon(isRunning
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: toSetButtons,
               ),
             ),
           ),
