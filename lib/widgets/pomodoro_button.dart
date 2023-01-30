@@ -6,8 +6,11 @@ class PomodoroButton extends StatelessWidget {
   final Icon icon;
   final VoidCallback onPressed;
 
-  const PomodoroButton(
-      {super.key, required this.icon, required this.onPressed});
+  const PomodoroButton({
+    super.key,
+    required this.icon,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
